@@ -1,5 +1,4 @@
 # src/evaluation/accuracy.py
-from sklearn.metrics import accuracy_score
 from datasets import load_metric
 from bert_score import score as bertscore
 from rouge_score import rouge_scorer
@@ -11,7 +10,7 @@ rouge = load_metric("rouge")
 # Load the BLEU metric
 bleu = load_metric("bleu")
 
-def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarray, reference_vector: np.ndarray, similarity_threshold: float = 0.7) -> dict:
+def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarray, reference_vector: np.ndarray) -> dict:
   
     # BLEU score
     bleu_score = bleu.compute(predictions=[predicted], references=[[reference]])["bleu"]
@@ -25,8 +24,6 @@ def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarra
 
     # Cosine Similarity
     cosine_sim = cosine_similarity([predicted_vector], [reference_vector])[0][0]
-
-    accuracy = accuracy_score([1 if cosine_sim >= similarity_threshold else 0], [1])
 
     return {
         "bleu": bleu_score,
