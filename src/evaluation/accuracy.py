@@ -2,7 +2,7 @@
 from sklearn.metrics import accuracy_score
 from datasets import load_metric
 from bert_score import score as bertscore
-from rouge_score import rouge_score
+from rouge_score import rouge_scorer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
@@ -11,19 +11,8 @@ rouge = load_metric("rouge")
 # Load the BLEU metric
 bleu = load_metric("bleu")
 
-def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarray, reference_vector: np.ndarray) -> dict:
-    """
-    Compute accuracy using multiple metrics: BLEU, ROUGE, BERTScore, and Cosine Similarity.
-    Args:
-        predicted (str): Chatbot's response
-        reference (str): Ground truth or reference text
-        predicted_vector (np.ndarray): Embedding vector of the predicted response
-        reference_vector (np.ndarray): Embedding vector of the reference text
-    
-    Returns:
-        dict: Dictionary containing BLEU, ROUGE, BERTScore, and Cosine Similarity metrics
-    """
-    
+def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarray, reference_vector: np.ndarray, similarity_threshold: float = 0.7) -> dict:
+  
     # BLEU score
     bleu_score = bleu.compute(predictions=[predicted], references=[[reference]])["bleu"]
 
@@ -36,6 +25,8 @@ def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarra
 
     # Cosine Similarity
     cosine_sim = cosine_similarity([predicted_vector], [reference_vector])[0][0]
+
+    accuracy = accuracy_score([1 if cosine_sim >= similarity_threshold else 0], [1])
 
     return {
         "bleu": bleu_score,
