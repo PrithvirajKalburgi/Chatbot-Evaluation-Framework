@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from config import MONGO_URI, MONGO_DB_NAME, MONGO_COLLECTION_NAME
 
 
-client =MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI)
 db = client[MONGO_DB_NAME]
 prompt_collection = db["prompt_collection"]
 evaluation_collection = db["evaluation_collection"]
