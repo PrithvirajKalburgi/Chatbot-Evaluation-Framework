@@ -1,6 +1,6 @@
 # src/qdrant_connector.py
 from qdrant_client import QdrantClient
-from config import QDRANT_HOST, QDRANT_PORT, QDRANT_COLLECTIONS
+from ..config import QDRANT_HOST, QDRANT_PORT, QDRANT_COLLECTIONS
 
 client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 

@@ -1,6 +1,6 @@
 # src/mongodb_connector.py
 from pymongo import MongoClient
-from config import MONGO_URI, MONGO_DB_NAME, MONGO_COLLECTION_NAME
+from ..config import MONGO_URI, MONGO_DB_NAME, MONGO_COLLECTION_NAME
 
 
 client = MongoClient(MONGO_URI)
