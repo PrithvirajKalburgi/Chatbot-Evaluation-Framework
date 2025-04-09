@@ -1,17 +1,25 @@
-#Importing modules
+# src/qdrant_connector.py
+from qdrant_client import QdrantClient
+from config import QDRANT_HOST, QDRANT_PORT, QDRANT_COLLECTIONS
 
-from qdrant_client import QdrantClient #QdrantClient is imported from qdrant_client library which is used to interact with a Qdrant vector database.
-from config import QDRANT_HOST, QDRANT_PORT, QDRANT_COLLECTION #Configuration values defined in the config.py file  
+client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 
-def get_qdrant_data():
-    client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT) #QdrantClient object is created using the host and port from the config file, establishes connection to Qdrant server
-    results, _ = client.scroll(
-        collection_name=QDRANT_COLLECTION,
-        with_payload=True,
-        limit=1000
-    )
-    #scroll() : method is used to retrieve data from a collection in Qdrant
-    # with_playload = True : ensures that the result includes not just the vectors, but also any additional metadata (payload). 
-    # limit=1000 : limits the number of results to 1000
-    # the method returns a tuple: a list of results and a "next page" offset (not used here, hence the "_")
-    return results
+def fetch_relevant_data(query_text: str) -> dict:
+    """
+    Fetch relevant data from Qdrant collections.
+    Args:
+        query_text (str): User query to search for relevant context
+    
+    Returns:
+        dict: Dictionary with collection name and retrieved text
+    """
+    for collection in QDRANT_COLLECTIONS:
+        search_result = client.search(
+            collection_name=collection,
+            query_vector=client.embeddings.encode(query_text),
+            limit=3  # Change this limit based on your requirement (e.g., how many chunks you want)
+        )
+        if search_result:
+            payload = search_result[0].payload  # Get the first relevant result
+            return {"collection": collection, "text": payload.get("node_content", {}).get("text", "")}
+    return {"collection": None, "text": ""}

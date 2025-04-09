@@ -7,4 +7,5 @@ QDRANT_COLLECTION = [
 
 MONGO_URI = "mongodb://localhost:27017"
 MONGO_DB_NAME = "spogen"
-MONGO_COLLECTION_NAME = "evaluation_responses"
+MONGO_PROMPT_COLLECTION = "prompt_collection"
+MONGO_EVALUATION_COLLECTON = "evaluation_collection"

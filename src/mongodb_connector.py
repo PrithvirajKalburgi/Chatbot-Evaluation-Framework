@@ -1,17 +1,36 @@
-# Importing modules
-from pymongo import MongoClient # MongoClient imported from pymongo library, used to connect to a MongoDB database.
-from config import MONGO_URI, MONGO_DB_NAME, MONGO_COLLECTION_NAME #Configuration values mentioned in the config file
+# src/mongodb_connector.py
+from pymongo import MongoClient
+from config import MONGO_URI, MONGO_DB_NAME, MONGO_COLLECTION_NAME
 
-def get_collection():
-    client = MongoClient(MONGO_URI)
-    db = client[MONGO_DB_NAME]
-    return db[MONGO_COLLECTION_NAME]
 
-    # This function connects to MongoDB using the URI and accesses a specific database (MONGO_DB_NAME) and returns the desired collection (MONGO_COLLECTION_NAME) from that database.
+client =MongoClient(MONGO_URI)
+db = client[MONGO_DB_NAME]
+prompt_collection = db["prompt_collection"]
+evaluation_collection = db["evaluation_collection"]
 
-def insert_result(result: dict):
-    collection = get_collection()
-    collection.insert_one(result)
+#Fetch query from prompt collection
 
-    #Gets the MongoDB collection using get_collection(). Inserts one document (Python dictionary) into the collection using insert_one(). 
-    #Result parameter is expected to be a dictionary (dict) that can be stored in MongoDB. 
+def fetch_user_query(query_id: str) -> str:
+
+    prompt = prompt_collection.find_one({"_id": query_id})
+
+    if prompt:
+        return prompt.get("user_prompt", "")
+    else:
+        return ""
+    
+def store_evaluation(query_id: str, ai_response: str, evaluation_scores: dict):
+    """
+    Store evaluation results in MongoDB.
+    Args:
+        query (str): The user query
+        response (str): The chatbot's response
+        metrics (dict): Dictionary of evaluation metrics (BLEU, ROUGE, BERTScore)
+    """
+    evaluation_document = {
+        "query_id": query_id,
+        "ai_response": ai_response,
+        "evaluation_scores": evaluation_scores
+    }
+    evaluation_collection.insert_one(evaluation_document)
+
