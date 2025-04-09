@@ -1,0 +1,24 @@
+#Core dependencies
+numpy
+pandas
+scikit-learn
+nltk
+torch
+
+#Sentence embeddings
+sentence-transformers
+
+#Hallucination detection
+lettucedetect
+
+#Vector database(Qdrant)
+qdrant-client
+
+#Database (MongoDB)
+pymongo
+
+#Configuration & Environment Management
+python-dotenv
+
+#Unit Testing
+pytest
