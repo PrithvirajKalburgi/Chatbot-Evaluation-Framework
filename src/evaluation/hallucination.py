@@ -1,14 +1,29 @@
-from lettucedetect import Lettuce
+from lettucedetect.models.inference import HallucinationDetector
 
-lettuce = Lettuce(mode_name="lettuce-bert-base-uncased")
+detector = HallucinationDetector(
+    method="transformer", 
+    model_path="KRLabsOrg/lettucedect-base-modernbert-en-v1"
+)
 
 def detect_hallucination(predicted: str, retrieved_context: str, threshold: float = 0.5) -> dict:
-    result = lettuce.score(response=predicted, context=retrieved_context)
+    predictions = detector.predict( 
+        context=[retrieved_context],
+        question="",
+        answer=predicted,
+        output_format="spans"
+    )
+    
+      
 
-    score = result["score"]
-    hallucinated = score < threshold
-
-    return {
-        "hallucination_score": score,
+    if predictions:
+        score = predictions[0]['confidence']
+        hallucinated = score < threshold
+    
+    else:
+        score = 1.0
+        hallucinated = False
+    
+    return{
+        "hallunication_score": score,
         "hallucinated": hallucinated
     }

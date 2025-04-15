@@ -1,33 +1,66 @@
 # src/evaluation/accuracy.py
-from datasets import load_metric
+from evaluate import load
 from bert_score import score as bertscore
-from rouge_score import rouge_scorer
 from sklearn.metrics.pairwise import cosine_similarity
+from embedding_utils import embed_text
+from typing import List
 import numpy as np
 
 # Load the ROUGE metric
-rouge = load_metric("rouge")
+rouge = load("rouge")
 # Load the BLEU metric
-bleu = load_metric("bleu")
+bleu = load("bleu")
 
-def compute_accuracy(predicted: str, reference: str, predicted_vector: np.ndarray, reference_vector: np.ndarray) -> dict:
+def compute_accuracy(predicted: str, reference_chunks: str, predicted_embedding: np.ndarray, reference_embeddings: List[np.ndarray]) -> dict:
+
+    predicted_embedding = predicted_embedding.flatten()
+    reference_embedding = [embed.flatten() for embed in reference_embeddings]
   
     # BLEU score
-    bleu_score = bleu.compute(predictions=[predicted], references=[[reference]])["bleu"]
+    bleu_scores = [
+        bleu.compute(predictions=[predicted], references=[[chunk]])["bleu"]
+        for chunk in reference_chunks
+
+    ]
 
     # ROUGE score
-    rouge_score = rouge.compute(predictions=[predicted], references=[reference])
+    rouge_scores = []
+    for chunk in reference_chunks:
+        scores = rouge.compute(predictions=[predicted], references=[chunk])
+        rouge_scores.append({
+            "rouge1": scores["rouge1"],
+            "rouge2": scores["rouge2"],
+            "rougeL": scores["rougel"]
+        })
 
     # BERTScore
-    P, R, F1 = bertscore(predicted, reference, lang="en")
-    bertscore_f1 = F1.mean().item()  # Take the mean F1 score
-
+    combined_reference = " ".join(reference_chunks)
+    _, _, bert_f1 = bertscore([predicted], [combined_reference], lang="en")
+    
     # Cosine Similarity
-    cosine_sim = cosine_similarity([predicted_vector], [reference_vector])[0][0]
+    cosine_sims = [
+        cosine_similarity([predicted_embedding], [chunk_embed])[0][0]
+        for chunk_embed in reference_embeddings
+    ]
 
     return {
-        "bleu": bleu_score,
-        "rouge": rouge_score,
-        "bertscore": bertscore_f1,
-        "cosine_similarity": cosine_sim
+        "bleu": {
+            "min": min(bleu_scores),
+            "max": max(bleu_scores),
+            "mean": sum(bleu_scores) / len(bleu_scores)
+        },
+        "rouge": {
+            "rouge1": average_metric(rouge_scores, "rouge1"),
+            "rouge2": average_metric(rouge_scores, "rouge2"), 
+            "rougeL": average_metric(rouge_scores, "rougeL")
+        },
+        "bertscore": bert_f1.mean().item(),
+        "cosine_similarity": {
+            "min": min(cosine_sims),
+            "max": max(cosine_sims),
+            "mean": sum(cosine_sims) / len(cosine_sims)
+        }
     }
+
+def average_metric (scores: List[dict], metric_name: str) -> float:
+    return sum(s[metric_name] for s in scores) / len(scores)
