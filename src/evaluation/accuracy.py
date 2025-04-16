@@ -30,7 +30,7 @@ def compute_accuracy(predicted: str, reference_chunks: str, predicted_embedding:
         rouge_scores.append({
             "rouge1": scores["rouge1"],
             "rouge2": scores["rouge2"],
-            "rougeL": scores["rougel"]
+            "rougeL": scores["rougeL"]
         })
 
     # BERTScore
@@ -45,20 +45,20 @@ def compute_accuracy(predicted: str, reference_chunks: str, predicted_embedding:
 
     return {
         "bleu": {
-            "min": min(bleu_scores),
-            "max": max(bleu_scores),
-            "mean": sum(bleu_scores) / len(bleu_scores)
+            "min": float(min(bleu_scores)),
+            "max": float(max(bleu_scores)),
+            "mean": float(sum(bleu_scores) / len(bleu_scores))
         },
         "rouge": {
-            "rouge1": average_metric(rouge_scores, "rouge1"),
-            "rouge2": average_metric(rouge_scores, "rouge2"), 
-            "rougeL": average_metric(rouge_scores, "rougeL")
+            "rouge1": float(average_metric(rouge_scores, "rouge1")),
+            "rouge2": float(average_metric(rouge_scores, "rouge2")), 
+            "rougeL": float(average_metric(rouge_scores, "rougeL"))
         },
-        "bertscore": bert_f1.mean().item(),
+        "bertscore": float(bert_f1.mean().item()),
         "cosine_similarity": {
-            "min": min(cosine_sims),
-            "max": max(cosine_sims),
-            "mean": sum(cosine_sims) / len(cosine_sims)
+            "min": float(min(cosine_sims)),
+            "max": float(max(cosine_sims)),
+            "mean": float(sum(cosine_sims) / len(cosine_sims))
         }
     }
 
