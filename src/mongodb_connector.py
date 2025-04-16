@@ -2,7 +2,7 @@
 from pymongo import MongoClient
 from pymongo import DESCENDING
 from config import MONGO_URI, MONGO_DB_NAME, MONGO_PROMPT_COLLECTION, MONGO_EVALUATION_COLLECTON
-import datetime
+from datetime import datetime, timezone
 
 
 client = MongoClient(MONGO_URI)
@@ -44,7 +44,7 @@ def store_evaluation(query_id: str, ai_response: str, evaluation_scores: dict):
         "user_query": prompt_collection.find_one({"_id": query_id})['user_prompt']['text'],
         "ai_response": ai_response,
         "evaluation_scores": evaluation_scores,
-        "timestamp": datetime.datetime.utcnow()
+        "timestamp": datetime.now(timezone.utc)
     }
     evaluation_collection.insert_one(evaluation_document)
 

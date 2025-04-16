@@ -1,12 +1,17 @@
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import accuracy_score
 import numpy as np
+from typing import Dict
 
-def compute_relevance(predicted_vector: np.ndarray, reference_vector: np.ndarray, similarity_threshold: float = 0.7) -> dict:
-    cosine_sim = cosine_similarity([predicted_vector], [reference_vector])[0][0]
-    relevance = accuracy_score([1 if cosine_sim >= similarity_threshold else 0], [1])
+def compute_relevance(query_embedding: np.ndarray, response_embedding: np.ndarray, similarity_threshold: float = 0.7) -> Dict[str, float]:
 
+    query_embed = query_embedding.flatten()
+    response_embed = response_embedding.flatten()
+
+    cosine_sim = cosine_similarity(
+        [query_embed], [response_embed]
+        )[0][0]
+    
     return{
-        "cosine_similarity": cosine_sim,
-        "relevance": relevance
+        "cosine_similarity": float(cosine_sim),
+        "is_relevant":  bool(cosine_sim >= similarity_threshold) 
     }
