@@ -8,7 +8,6 @@ detector = HallucinationDetector(
 )
 
 def detect_hallucination(predicted_response: str, retrieved_chunks: List[str], threshold: float = 0.5) -> Dict [str, float]:
-    combined_context = " ".join(retrieved_chunks)
 
     chunk_scores = []
     
@@ -31,3 +30,5 @@ def detect_hallucination(predicted_response: str, retrieved_chunks: List[str], t
         "is_hallucinated": overall_score < threshold,
         "chunk_scores": chunk_scores
     }
+
+
