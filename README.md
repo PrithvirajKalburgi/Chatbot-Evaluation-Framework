@@ -8,7 +8,16 @@ This project is a machine learning-based evaluation framework designed to assess
 
 The framework was developed as part of a bachelor's thesis project to help systematically validate chatbot outputs in an industrial environment before deployment. It uses text embeddings and structured evaluation metrics to provide quantitative insights into response quality. 
 
-The system receives conversational data, generates embeddings, applies evaluation metrics, and produces results that help identify weaknesses and areas for improvement in the chatbot.
+**Evalution Framework Workflow Description:**
+The framework receives conversational data including the user query, AI-generated response, and the retrieved source material used to generate the response from Mongo DB after each interaction. 
 
-<img width="798" height="476" alt="image" src="https://github.com/user-attachments/assets/314652ea-e08f-41a3-9f88-2f69db804a53" />
+Text embeddings are generated using _Sentence Transformers_, enabling semantic comparison between the query, response, and source content. Machine learning-based evaluation metrics are then applied to assess aspects such as relevance, similarity, and potential hallucination.
+
+Evaluation results are written back to MongoDB in a separate collection, allowing systematic tracking of performance, identification of weaknesses, and analysis of areas for improvement in the chatbot. 
+
+**Evaluation Framework Workflow Diagram:**
+<img width="788" height="680" alt="image" src="https://github.com/user-attachments/assets/1ce1ba4d-64ea-42b2-99e2-d3339cc90b4d" />
+
+
+
 
