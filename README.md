@@ -1,4 +1,4 @@
-**Project Overview**
+****Project Overview********
 
 This project is a machine learning-based evaluation framework designed to assess the quality of AI-generated chatbot responses. It focuses on evaluating aspects such as: 
   - Response relevance
@@ -18,6 +18,7 @@ Evaluation results are written back to MongoDB in a separate collection, allowin
 
 **Evaluation Framework Workflow Diagram:**
 <img width="788" height="680" alt="image" src="https://github.com/user-attachments/assets/1ce1ba4d-64ea-42b2-99e2-d3339cc90b4d" />
+
 
 
 
