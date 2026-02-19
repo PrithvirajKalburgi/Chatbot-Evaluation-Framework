@@ -27,9 +27,7 @@ Evaluation results are written back to MongoDB in a separate collection, allowin
    ```
    python -m venv venv
    source venv/bin/activate # macOS/Linux
-   venv\Scripts\activate # Windows
-
-   ```
+   venv\Scripts\activate # Windows ```
 3. Install dependencies:
    `pip install -r requirements.txt`
 
@@ -39,10 +37,12 @@ Evaluation results are written back to MongoDB in a separate collection, allowin
    - MongoDB (stores conversation data and evaluation results)
    - Qdrant (used by the chatbot to retrieve source material, running as a Docker container)
    - Chatbot backend and frontend (provided separately)
+     
 _Note: Evaluation framework assumes these components are already running and accessible._
 
 6. Run evaluation framework:
    `python main.py`
+
 
 
 
