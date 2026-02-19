@@ -10,6 +10,7 @@ This project is a machine learning-based evaluation framework designed to assess
 The framework was developed as part of a bachelor's thesis project to help systematically validate chatbot outputs in an industrial environment before deployment. It uses text embeddings and structured evaluation metrics to provide quantitative insights into response quality. 
 
 **Evalution Framework Workflow Description:**
+-----------------------------------------------------------------------------------------------------------------------------
 
 The framework receives conversational data including the user query, AI-generated response, and the retrieved source material used to generate the response from Mongo DB after each interaction. 
 
@@ -19,6 +20,7 @@ Evaluation results are written back to MongoDB in a separate collection, allowin
 
 **Evaluation Framework Workflow Diagram:**
 <img width="788" height="680" alt="image" src="https://github.com/user-attachments/assets/1ce1ba4d-64ea-42b2-99e2-d3339cc90b4d" />
+
 
 
 
