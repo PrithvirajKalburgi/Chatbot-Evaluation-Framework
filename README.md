@@ -24,9 +24,9 @@ Evaluation results are written back to MongoDB in a separate collection, allowin
 **Scripts to run the framework:**
 -----------------------------------------------------------------------------------------------------------------------------
 1. Clone the repository and create a virtual environment:
-   python -m venv venv
+   ```python -m venv venv
    source venv/bin/activate # macOS/Linux
-   venv\Scripts\activate # Windows
+   venv\Scripts\activate # Windows ```
 
 2. Install dependencies:
    pip install -r requirements.txt
@@ -41,6 +41,7 @@ _Note: Evaluation framework assumes these components are already running and acc
 
 5. Run evaluation framework:
    python main.py
+
 
 
 
